@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purser — AI fund admin & operations for emerging VC funds</title>
+  <meta name="description" content="Purser is the AI operating system for emerging VC fund managers — LP onboarding, capital calls, NAV and LP reporting, portfolio data collection and regulatory filings, automated with GP review.">
+  <meta name="keywords" content="fund administration software, fund admin emerging managers, VC fund operations, LP reporting software, capital call automation, NAV reporting, emerging manager fund admin">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0F172A">
+  <!-- TODO: replace purser-domain.com everywhere with your real domain once purchased -->
+  <link rel="canonical" href="https://purser-domain.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Purser">
+  <meta property="og:url" content="https://purser-domain.com/">
+  <meta property="og:title" content="Purser — AI fund operations for emerging managers">
+  <meta property="og:description" content="LP onboarding, capital calls, NAV and LP reporting, portfolio data and regulatory filings — automated, with GP review.">
+  <meta property="og:image" content="https://purser-domain.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Purser — AI fund operations for emerging managers">
+  <meta name="twitter:description" content="The AI operating system for emerging VC fund managers.">
+  <meta name="twitter:image" content="https://purser-domain.com/og-image.png">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNDc1NTY5Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0xMyAyMlYxMGg0YTQgNCAwIDAgMSAwIDhoLTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Purser",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "url": "https://purser-domain.com/",
+    "description": "The AI operating system for emerging VC fund managers — LP onboarding, capital calls, NAV and LP reporting, portfolio data and regulatory filings.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+    "publisher": { "@type": "Organization", "name": "Vela Capital Ltd", "email": "hello@fundvela.com" }
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #111111;
+      --ink-mid: #2D2D2D;
+      --ink-light: #4B4B4B;
+      --muted: #717171;
+      --muted-light: #9A9A9A;
+      --border: #E3E3E3;
+      --border-dark: #C8C8C8;
+      --bg: #F5F5F5;
+      --bg-dark: #EFEFEF;
+      --white: #FFFFFF;
+      --accent: #111111;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--white); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 48px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
+    .nav-cta { background: var(--ink); color: white; padding: 9px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: opacity .15s; }
+    .nav-cta:hover { opacity: 0.75; }
+
+    /* HERO */
+    .hero { padding: 120px 48px 72px; max-width: 1080px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); color: var(--muted); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 28px; border: 1px solid var(--border); letter-spacing: 0.02em; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(40px, 5.5vw, 68px); font-weight: 900; color: var(--ink); line-height: 1.04; letter-spacing: -2.5px; margin-bottom: 22px; max-width: 800px; }
+    .hero-sub { font-size: 18px; color: var(--muted); line-height: 1.7; max-width: 580px; margin-bottom: 36px; }
+    .hero-form { display: flex; gap: 10px; max-width: 420px; margin-bottom: 14px; }
+    .hero-form input { flex: 1; padding: 13px 16px; border: 1.5px solid var(--border-dark); border-radius: 9px; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; color: var(--ink); background: white; transition: border-color .2s; }
+    .hero-form input:focus { border-color: var(--ink); }
+    .hero-form button { padding: 13px 22px; background: var(--ink); color: white; border: none; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: opacity .15s; }
+    .hero-form button:hover { opacity: 0.75; }
+    .hero-note { font-size: 13px; color: var(--muted-light); }
+    .hero-success { display: none; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; max-width: 420px; }
+    .hero-success strong { display: block; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .hero-success span { font-size: 13px; color: var(--muted); }
+
+    /* HORIZONTAL DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* PITCH STRIP — growth angle */
+    .pitch-strip { background: var(--ink); }
+    .pitch-strip-inner { max-width: 1080px; margin: 0 auto; padding: 48px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+    .pitch-item { padding: 0 32px 0 0; border-right: 1px solid rgba(255,255,255,0.1); }
+    .pitch-item:last-child { border-right: none; padding-right: 0; padding-left: 32px; }
+    .pitch-item:nth-child(2) { padding-left: 32px; }
+    .pitch-item h3 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .pitch-item p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+    /* SECTION */
+    .section { padding: 80px 48px; max-width: 1080px; margin: 0 auto; }
+    .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .section h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: var(--ink); letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 14px; }
+    .section p.lead { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 540px; margin-bottom: 48px; }
+
+    /* FEATURE GRID 3-COL */
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .feat-cell { background: white; padding: 28px; transition: background .15s; }
+    .feat-cell:hover { background: var(--bg); }
+    .feat-icon { font-size: 22px; margin-bottom: 12px; }
+    .feat-cell h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+    .feat-cell p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* GROWTH SECTION */
+    .growth { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 48px; }
+    .growth-inner { max-width: 1080px; margin: 0 auto; }
+    .growth-inner .section-tag { margin-bottom: 10px; }
+    .growth-inner h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: var(--ink); letter-spacing: -1.5px; margin-bottom: 14px; max-width: 640px; }
+    .growth-inner p.lead { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 540px; margin-bottom: 48px; }
+    .growth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .growth-card { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 24px 28px; }
+    .growth-card h3 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .growth-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* SCREENS */
+    .screens { padding: 80px 48px; max-width: 1080px; margin: 0 auto; }
+    .screen-block { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-bottom: 64px; }
+    .screen-block:last-child { margin-bottom: 0; }
+    .screen-desc-num { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .screen-desc h3 { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.8px; margin-bottom: 10px; line-height: 1.2; }
+    .screen-desc p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+    .screen-desc ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .screen-desc ul li { font-size: 14px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.5; }
+    .screen-desc ul li::before { content: '→'; position: absolute; left: 0; color: var(--muted-light); font-size: 12px; top: 2px; }
+
+    /* MOCK UI */
+    .mock { background: white; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.06); }
+    .mock-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 7px; }
+    .mdot { width: 10px; height: 10px; border-radius: 50%; }
+    .mdot.r { background: #FC6058; } .mdot.a { background: #FEC02F; } .mdot.g { background: #2ACA44; }
+    .mock-bar-label { font-size: 11px; color: var(--muted); margin-left: 6px; font-weight: 500; }
+
+    /* CAPITAL CALL MOCK */
+    .cc-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .cc-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .cc-badge { font-size: 11px; font-weight: 700; background: #FEF3C7; color: #D97706; padding: 3px 9px; border-radius: 4px; }
+    .cc-summary { padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .cc-stat { border-right: 1px solid var(--border); padding: 0 16px 0 0; }
+    .cc-stat:first-child { padding-left: 0; }
+    .cc-stat:last-child { border-right: none; padding-left: 16px; }
+    .cc-stat-val { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
+    .cc-stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .cc-lp-list { }
+    .cc-lp-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 11px 20px; border-bottom: 1px solid var(--border); align-items: center; }
+    .cc-lp-row:last-child { border-bottom: none; }
+    .cc-lp-row.hd { background: var(--bg); }
+    .cc-lp-cell { font-size: 12px; color: var(--ink); }
+    .cc-lp-cell.h { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cc-lp-name { font-weight: 600; font-size: 13px; }
+    .status-sent { display: inline-block; font-size: 10px; font-weight: 700; background: #DBEAFE; color: #2563EB; padding: 2px 7px; border-radius: 4px; }
+    .status-rcvd { display: inline-block; font-size: 10px; font-weight: 700; background: #DCFCE7; color: #16A34A; padding: 2px 7px; border-radius: 4px; }
+    .status-pend { display: inline-block; font-size: 10px; font-weight: 700; background: #F5F5F5; color: #717171; padding: 2px 7px; border-radius: 4px; }
+
+    /* LP REPORT MOCK */
+    .lp-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .lp-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .lp-period { font-size: 12px; color: var(--muted); }
+    .lp-content { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .lp-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+    .lp-text { font-size: 12px; color: var(--ink-light); line-height: 1.65; }
+    .lp-highlight { background: var(--bg); border-left: 3px solid var(--ink); padding: 10px 14px; border-radius: 0 6px 6px 0; }
+    .lp-highlight p { font-size: 12px; color: var(--ink); line-height: 1.6; }
+    .lp-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .lp-kpi { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
+    .lp-kpi-val { font-size: 16px; font-weight: 800; color: var(--ink); }
+    .lp-kpi-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .lp-ai-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; width: fit-content; }
+    .ai-dot { width: 6px; height: 6px; background: #16A34A; border-radius: 50%; }
+
+    /* PORTFOLIO DATA MOCK */
+    .pd-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .pd-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .pd-period { font-size: 12px; color: var(--muted); }
+    .pd-table {}
+    .pd-row { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1.2fr; padding: 11px 20px; border-bottom: 1px solid var(--border); align-items: center; }
+    .pd-row:last-child { border-bottom: none; }
+    .pd-row.hd { background: var(--bg); }
+    .pd-cell { font-size: 12px; color: var(--ink); }
+    .pd-cell.h { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .pd-co { font-weight: 600; font-size: 13px; }
+    .pd-co-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .resp-yes { display: inline-block; font-size: 10px; font-weight: 700; background: #DCFCE7; color: #16A34A; padding: 2px 7px; border-radius: 4px; }
+    .resp-no { display: inline-block; font-size: 10px; font-weight: 700; background: #FEE2E2; color: #DC2626; padding: 2px 7px; border-radius: 4px; }
+    .resp-pend { display: inline-block; font-size: 10px; font-weight: 700; background: #FEF3C7; color: #D97706; padding: 2px 7px; border-radius: 4px; }
+
+    /* TESTIMONIALS */
+    .testimonials { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 48px; }
+    .testimonials-inner { max-width: 1080px; margin: 0 auto; }
+    .t-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
+    .t-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; }
+    .t-quote { font-size: 14px; color: var(--ink); line-height: 1.7; margin-bottom: 18px; }
+    .t-author { display: flex; align-items: center; gap: 10px; }
+    .t-av { width: 32px; height: 32px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+    .t-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .t-role { font-size: 11px; color: var(--muted); }
+
+    /* FAQ */
+    .faq { padding: 80px 48px; max-width: 720px; margin: 0 auto; }
+    .faq h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; color: var(--ink); letter-spacing: -1.5px; margin-bottom: 36px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 0; font-size: 15px; font-weight: 600; color: var(--ink); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; text-align: left; gap: 16px; }
+    .faq-icon { font-size: 20px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { font-size: 14px; color: var(--muted); line-height: 1.75; max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .3s; }
+    .faq-item.open .faq-a { max-height: 320px; padding-bottom: 18px; }
+
+    /* BOTTOM CTA */
+    .bottom-cta { background: var(--ink); padding: 80px 48px; text-align: center; }
+    .bottom-cta h2 { font-size: clamp(28px, 4vw, 52px); font-weight: 900; color: white; letter-spacing: -2.5px; line-height: 1.05; margin-bottom: 14px; }
+    .bottom-cta p { color: rgba(255,255,255,0.4); font-size: 16px; margin-bottom: 32px; }
+    .bottom-form { display: flex; gap: 10px; max-width: 400px; margin: 0 auto; }
+    .bottom-form input { flex: 1; padding: 13px 16px; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 9px; color: white; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; }
+    .bottom-form input::placeholder { color: rgba(255,255,255,0.3); }
+    .bottom-form button { padding: 13px 22px; background: white; color: var(--ink); border: none; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: opacity .15s; }
+    .bottom-form button:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer { background: #0A0A0A; padding: 36px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer .footer-logo { font-size: 16px; font-weight: 800; color: white; }
+    footer p.copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 96px 20px 56px; }
+      .hero-form { flex-direction: column; }
+      .pitch-strip-inner { grid-template-columns: 1fr; padding: 32px 20px; gap: 24px; }
+      .pitch-item { border-right: none; padding: 0 0 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .pitch-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .growth-grid, .t-grid { grid-template-columns: 1fr; }
+      .screen-block { grid-template-columns: 1fr; }
+      .section, .faq, .screens, .testimonials, .growth { padding: 56px 20px; }
+      .bottom-form { flex-direction: column; }
+      footer { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Purser</div>
+  <a href="#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">AI-Powered · Emerging VC · UK Fund Admin</div>
+  <h1>AI-enabled fund operations<br>for emerging managers.</h1>
+  <p class="hero-sub">Purser is the AI operating system for emerging UK VC managers. It handles LP onboarding, capital calls, portfolio reporting, and regulatory filings — so you can spend your time on what creates returns.</p>
+  <div id="waitlist">
+    <!-- TODO: create a dedicated Purser form at formspree.io and replace the ID below -->
+    <form class="hero-form" id="fund-form" action="https://formspree.io/f/xlgyewva" method="POST">
+      <input type="hidden" name="proposition" value="Purser — Fund Admin">
+      <input type="hidden" name="_subject" value="New Purser waitlist signup">
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Apply for access</button>
+    </form>
+    <p class="hero-note">Design partner programme for emerging UK managers. No credit card.</p>
+    <div class="hero-success" id="fund-success">
+      <strong>Application received ✓</strong>
+      <span>We'll reach out to schedule a call. hello@fundvela.com</span>
+    </div>
+  </div>
+</section>
+
+<!-- PITCH STRIP -->
+<div class="pitch-strip">
+  <div class="pitch-strip-inner">
+    <div class="pitch-item">
+      <h3>More time on what creates returns</h3>
+      <p>The best GPs win on deal quality, portfolio support, and LP relationships — not on admin. Purser handles the ops so you can focus on the 20% that actually moves the needle.</p>
+    </div>
+    <div class="pitch-item">
+      <h3>Raise Fund II from a position of strength</h3>
+      <p>Institutional-quality LP reporting, on time, every quarter. LPs who receive exceptional reporting re-up. LPs who receive Excel attachments at month-end don't.</p>
+    </div>
+    <div class="pitch-item">
+      <h3>Scale without adding headcount</h3>
+      <p>Purser lets a two-person team operate like a full ops function. Deploy the savings into sourcing, advisors, or portfolio support — where they compound.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-tag">What Purser automates</div>
+  <h2>The complete fund ops stack.</h2>
+  <p class="lead">Every task that currently consumes your team's time — Purser handles end to end, with GP review before anything goes out.</p>
+  <div class="feat-grid">
+    <div class="feat-cell">
+      <div class="feat-icon">👤</div>
+      <h3>LP Onboarding</h3>
+      <p>Digital subscription documents, KYC/AML checks, e-signatures, and LP portal access — automated. New LP onboarded in 48 hours.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">📥</div>
+      <h3>Capital Calls</h3>
+      <p>AI calculates drawdown amounts, drafts notices for each LP, sends them, tracks receipt, and confirms at close. You approve in one click.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">📈</div>
+      <h3>NAV Reporting</h3>
+      <p>AI pulls portfolio data, applies your valuation policy, and produces a GP-ready NAV report. Monthly, automated, no analyst needed.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">📬</div>
+      <h3>LP Quarterly Reports</h3>
+      <p>AI drafts the full quarterly LP letter from fund data. You review and approve in 20 minutes. Reports go out on schedule, every quarter, without fail.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">📋</div>
+      <h3>Portfolio Data Collection</h3>
+      <p>AI sends structured data requests to portfolio companies, chases non-responders, validates submissions, and compiles the MI pack — automatically.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">📊</div>
+      <h3>Management Reporting</h3>
+      <p>Weekly fund dashboard for the GP team: cash position, portfolio KPIs, LP status, upcoming obligations. One source of truth, always current.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">🏛️</div>
+      <h3>Regulatory Filings</h3>
+      <p>Annex IV, FATCA, CRS — AI prepares filings from fund data. Compliance officer reviews and submits. Regulatory burden drops from weeks to hours.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">🧾</div>
+      <h3>Audit Preparation</h3>
+      <p>AI organises work papers, responds to auditor data requests, and produces an audit-ready trial balance — reducing external audit costs materially.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-icon">💼</div>
+      <h3>SPV + Fund in One</h3>
+      <p>Start with SPVs for early deals, scale into a fund. One platform, one LP experience. Your earliest investors follow you into Fund I without any migration.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GROWTH SECTION -->
+<div class="growth">
+  <div class="growth-inner">
+    <div class="section-tag">The real opportunity</div>
+    <h2>Purser doesn't just reduce costs. It unlocks growth.</h2>
+    <p class="lead">The best fund managers use operational leverage to spend more time on what matters — not to cut their admin bill. Here's what that looks like in practice.</p>
+    <div class="growth-grid">
+      <div class="growth-card">
+        <h3>Better LP experience → easier Fund II raise</h3>
+        <p>LPs judge emerging managers heavily on professionalism and communication. Institutional-quality quarterly reports, sent on time, build the trust that converts a Fund I LP into a Fund II anchor. Purser makes that standard, not exceptional.</p>
+      </div>
+      <div class="growth-card">
+        <h3>Better portfolio data → better investment decisions</h3>
+        <p>When you have clean, consistent monthly KPIs from every portfolio company, you spot problems earlier, identify follow-on opportunities faster, and write better board memos. That translates directly into portfolio performance.</p>
+      </div>
+      <div class="growth-card">
+        <h3>More GP time → more quality dealflow</h3>
+        <p>Every hour your team spends on admin is an hour not spent on sourcing, reference calls, or portfolio company support. The funds that win over a decade win on the quality of attention they give to their best bets.</p>
+      </div>
+      <div class="growth-card">
+        <h3>Operational credibility → institutional LP access</h3>
+        <p>Larger LPs — family offices, endowments, funds-of-funds — require institutional-quality reporting before they'll even take a meeting. Purser gives you the infrastructure to credibly approach these LPs from Fund I, not Fund III.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<section class="screens">
+  <div class="section-tag" style="margin-bottom: 10px;">How it looks</div>
+  <h2 style="font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px;">Built for how GPs actually work.</h2>
+  <p class="lead" style="font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 56px; line-height: 1.75;">Every screen is designed around one principle: give the GP a clear view, fast approval, and confidence that nothing is falling through the gaps.</p>
+
+  <!-- SCREEN 1: CAPITAL CALL -->
+  <div class="screen-block">
+    <div class="screen-desc">
+      <div class="screen-desc-num">01 — Capital Calls</div>
+      <h3>One approval.<br>Purser does the rest.</h3>
+      <p>You set the drawdown amount and close date. Purser calculates each LP's call, drafts the notices, sends them out, and tracks receipt — chasing automatically if funds haven't arrived by the deadline.</p>
+      <ul>
+        <li>Pre-calculated amounts per LP based on commitments</li>
+        <li>Branded notices sent via LP portal and email</li>
+        <li>Real-time receipt tracking with automatic chases</li>
+        <li>Capital call confirmed at close with no manual reconciliation</li>
+      </ul>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><div class="mdot r"></div><div class="mdot a"></div><div class="mdot g"></div><div class="mock-bar-label">Capital Calls — Purser</div></div>
+      <div class="cc-head">
+        <div class="cc-title">Q2 2026 — Drawdown #3</div>
+        <div class="cc-badge">In progress</div>
+      </div>
+      <div class="cc-summary">
+        <div class="cc-stat">
+          <div class="cc-stat-val">£620k</div>
+          <div class="cc-stat-label">Total called</div>
+        </div>
+        <div class="cc-stat" style="padding-left: 16px;">
+          <div class="cc-stat-val">£480k</div>
+          <div class="cc-stat-label">Received</div>
+        </div>
+        <div class="cc-stat" style="padding-left: 16px;">
+          <div class="cc-stat-val">£140k</div>
+          <div class="cc-stat-label">Outstanding</div>
+        </div>
+      </div>
+      <div class="cc-lp-list">
+        <div class="cc-lp-row hd">
+          <div class="cc-lp-cell h">LP Name</div>
+          <div class="cc-lp-cell h">Called</div>
+          <div class="cc-lp-cell h">Due</div>
+          <div class="cc-lp-cell h">Status</div>
+        </div>
+        <div class="cc-lp-row">
+          <div class="cc-lp-cell"><div class="cc-lp-name">Hartley Family Office</div></div>
+          <div class="cc-lp-cell">£200,000</div>
+          <div class="cc-lp-cell">28 Jun</div>
+          <div class="cc-lp-cell"><span class="status-rcvd">Received</span></div>
+        </div>
+        <div class="cc-lp-row">
+          <div class="cc-lp-cell"><div class="cc-lp-name">Meridian Ventures</div></div>
+          <div class="cc-lp-cell">£150,000</div>
+          <div class="cc-lp-cell">28 Jun</div>
+          <div class="cc-lp-cell"><span class="status-rcvd">Received</span></div>
+        </div>
+        <div class="cc-lp-row">
+          <div class="cc-lp-cell"><div class="cc-lp-name">Ashworth Capital</div></div>
+          <div class="cc-lp-cell">£130,000</div>
+          <div class="cc-lp-cell">28 Jun</div>
+          <div class="cc-lp-cell"><span class="status-sent">Notice sent</span></div>
+        </div>
+        <div class="cc-lp-row">
+          <div class="cc-lp-cell"><div class="cc-lp-name">B. Sutherland (HNWI)</div></div>
+          <div class="cc-lp-cell">£80,000</div>
+          <div class="cc-lp-cell">28 Jun</div>
+          <div class="cc-lp-cell"><span class="status-sent">Chase sent</span></div>
+        </div>
+        <div class="cc-lp-row">
+          <div class="cc-lp-cell"><div class="cc-lp-name">Thornfield Endowment</div></div>
+          <div class="cc-lp-cell">£60,000</div>
+          <div class="cc-lp-cell">30 Jun</div>
+          <div class="cc-lp-cell"><span class="status-pend">Scheduled</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: LP REPORT -->
+  <div class="screen-block" style="direction: rtl;">
+    <div class="screen-desc" style="direction: ltr;">
+      <div class="screen-desc-num">02 — LP Reporting</div>
+      <h3>Institutional-quality<br>reports. GP approves in 20 min.</h3>
+      <p>Purser drafts the full quarterly LP letter from your fund data — performance narrative, portfolio company updates, market commentary, and key metrics. You review, edit if needed, and approve. It goes out on schedule.</p>
+      <ul>
+        <li>Draft generated from actual fund and portfolio data</li>
+        <li>GP edits inline, no document switching</li>
+        <li>Branded PDF sent to LP portal and email simultaneously</li>
+        <li>Version history and read receipts tracked automatically</li>
+      </ul>
+    </div>
+    <div class="mock" style="direction: ltr;">
+      <div class="mock-bar"><div class="mdot r"></div><div class="mdot a"></div><div class="mdot g"></div><div class="mock-bar-label">LP Quarterly Report — Purser</div></div>
+      <div class="lp-head">
+        <div class="lp-title">Q1 2026 LP Report — Hartley Family Office</div>
+        <div class="lp-period">Draft · AI-generated</div>
+      </div>
+      <div class="lp-content">
+        <div>
+          <div class="lp-section-label">Fund Performance</div>
+          <div class="lp-kpis">
+            <div class="lp-kpi"><div class="lp-kpi-val">£8.4M</div><div class="lp-kpi-label">NAV</div></div>
+            <div class="lp-kpi"><div class="lp-kpi-val">1.24x</div><div class="lp-kpi-label">TVPI</div></div>
+            <div class="lp-kpi"><div class="lp-kpi-val">12</div><div class="lp-kpi-label">Portfolio cos.</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="lp-section-label">GP Commentary — Q1 2026</div>
+          <div class="lp-text">Q1 was a strong quarter for the portfolio. Two companies achieved revenue milestones ahead of schedule, and the overall NAV increased by 8% quarter-on-quarter driven primarily by a new funding round at Bloom & Wild (2.1x step-up to previous valuation). We made one new investment in the period — Helio Energy — at Seed stage, which aligns with our climate tech mandate.</div>
+        </div>
+        <div class="lp-highlight">
+          <p><strong>Purser drafted this section</strong> from fund data and portfolio company submissions. GP review time: ~18 minutes. Click any paragraph to edit inline before sending.</p>
+        </div>
+        <div class="lp-ai-badge"><div class="ai-dot"></div>AI-drafted from fund data · Last updated 2 hours ago</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: PORTFOLIO DATA -->
+  <div class="screen-block">
+    <div class="screen-desc">
+      <div class="screen-desc-num">03 — Portfolio Intelligence</div>
+      <h3>Portfolio KPIs collected. Automatically.</h3>
+      <p>Purser sends structured data requests to every portfolio company at the start of each reporting period. Founders complete a short web form. Purser validates and compiles. You get clean, consistent data — without chasing anyone.</p>
+      <ul>
+        <li>Customisable KPI templates per company or sector</li>
+        <li>Automated reminders and escalations for non-responders</li>
+        <li>Data validated for consistency before it reaches you</li>
+        <li>Compiled into management pack and LP report automatically</li>
+      </ul>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><div class="mdot r"></div><div class="mdot a"></div><div class="mdot g"></div><div class="mock-bar-label">Portfolio Data — Q1 2026 · Purser</div></div>
+      <div class="pd-head">
+        <div class="pd-title">Q1 2026 data collection</div>
+        <div class="pd-period">9/12 submitted · Due 15 Apr</div>
+      </div>
+      <div class="pd-table">
+        <div class="pd-row hd">
+          <div class="pd-cell h">Company</div>
+          <div class="pd-cell h">MRR</div>
+          <div class="pd-cell h">Headcount</div>
+          <div class="pd-cell h">Runway</div>
+          <div class="pd-cell h">Status</div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-cell"><div class="pd-co">Bloom & Wild</div><div class="pd-co-sub">Consumer · Seed</div></div>
+          <div class="pd-cell">£320k</div>
+          <div class="pd-cell">41</div>
+          <div class="pd-cell">22 mo.</div>
+          <div class="pd-cell"><span class="resp-yes">Submitted</span></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-cell"><div class="pd-co">Primer</div><div class="pd-co-sub">Fintech · Series A</div></div>
+          <div class="pd-cell">£1.1M</div>
+          <div class="pd-cell">88</div>
+          <div class="pd-cell">18 mo.</div>
+          <div class="pd-cell"><span class="resp-yes">Submitted</span></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-cell"><div class="pd-co">Wayve</div><div class="pd-co-sub">Deep tech · Series B</div></div>
+          <div class="pd-cell">—</div>
+          <div class="pd-cell">240</div>
+          <div class="pd-cell">31 mo.</div>
+          <div class="pd-cell"><span class="resp-pend">Chase sent</span></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-cell"><div class="pd-co">Helio Energy</div><div class="pd-co-sub">CleanTech · Seed</div></div>
+          <div class="pd-cell">£28k</div>
+          <div class="pd-cell">9</div>
+          <div class="pd-cell">14 mo.</div>
+          <div class="pd-cell"><span class="resp-yes">Submitted</span></div>
+        </div>
+        <div class="pd-row">
+          <div class="pd-cell"><div class="pd-co">NovaMed</div><div class="pd-co-sub">Healthtech · Seed</div></div>
+          <div class="pd-cell">£0</div>
+          <div class="pd-cell">6</div>
+          <div class="pd-cell">9 mo.</div>
+          <div class="pd-cell"><span class="resp-no">Overdue</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-tag" style="color: var(--muted);">What GPs say</div>
+    <h2>The problem we're solving.</h2>
+    <div class="t-grid">
+      <div class="t-card">
+        <p class="t-quote">"We're a two-person team managing a £12M fund. We spend more time on capital calls and LP reporting than on actually supporting our portfolio companies. That's backwards."</p>
+        <div class="t-author"><div class="t-av">JM</div><div><div class="t-name">Fund I GP</div><div class="t-role">£12M fund · Pre-seed · London</div></div></div>
+      </div>
+      <div class="t-card">
+        <p class="t-quote">"Every quarter I spend two weeks chasing portfolio companies for KPIs, writing the LP letter, reformatting it in Word. There's no reason a machine couldn't do 80% of that."</p>
+        <div class="t-author"><div class="t-av">AT</div><div><div class="t-name">VC Fund Manager</div><div class="t-role">Fund II · £22M AUM</div></div></div>
+      </div>
+      <div class="t-card">
+        <p class="t-quote">"Our biggest LP told us they re-upped into Fund II partly because our reporting was the best they received across their portfolio. That's the bar now — and it takes real infrastructure to hit it consistently."</p>
+        <div class="t-author"><div class="t-av">RC</div><div><div class="t-name">Solo GP</div><div class="t-role">Fund I deployed · Fund II closed</div></div></div>
+      </div>
+      <div class="t-card">
+        <p class="t-quote">"The family offices I want to bring into Fund II ask for institutional-quality reporting from day one. With our current setup we can't credibly show them that. It's a real barrier to the next level."</p>
+        <div class="t-author"><div class="t-av">SB</div><div><div class="t-name">Emerging GP</div><div class="t-role">Raising Fund II · £35M target</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="section-tag">FAQ</div>
+  <h2>Your questions answered.</h2>
+  <div class="faq-item">
+    <button class="faq-q">What fund size does Purser work for? <span class="faq-icon">+</span></button>
+    <div class="faq-a">Purser is designed for UK emerging managers running Fund I or Fund II, typically £5M–£50M. This is precisely the segment underserved by institutional fund admins, who price for large multi-hundred-million vehicles. There's no minimum — GPs often start with SPVs on the platform before they have a formal fund, then migrate operations as they raise.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q">Does Purser replace our existing fund admin entirely? <span class="faq-icon">+</span></button>
+    <div class="faq-a">For sub-threshold emerging managers (typically below £100M AUM, no leverage), yes — Purser is designed to be the full fund admin stack. For larger or more complex funds with bespoke structures, Purser handles the majority of operational work while any existing compliance function handles specific filings. We scope this with you before you commit.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q">How long does LP onboarding take? <span class="faq-icon">+</span></button>
+    <div class="faq-a">Typically 48 hours from invitation to LP portal access. The LP receives a branded digital invitation, completes subscription documents online, uploads KYC documents, and Purser runs automated AML checks. GP reviews and approves. LP receives portal access. Compare that to 2–3 weeks with paper-based subscription documents and manual KYC review.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q">What does portfolio data collection actually look like for founders? <span class="faq-icon">+</span></button>
+    <div class="faq-a">Founders receive a branded data request from the GP at the start of each reporting period. They complete a short web form with the KPIs you've defined for that company. Takes 10–15 minutes. Purser validates the submissions and compiles them — the founder never needs to log into a new system beyond the first setup, and the GP never has to chase manually.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q">Do I still need an FCA-regulated fund admin? <span class="faq-icon">+</span></button>
+    <div class="faq-a">That depends on your structure. Sub-threshold AIFMs face lighter regulatory requirements. Purser operates within an FCA Appointed Representative framework, which covers the arranging and reporting activities that emerging managers need. For specific regulatory advice, you'll need your own compliance counsel — but Purser reduces the compliance burden regardless of your structure.</div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <h2>Build the fund you<br>actually want to run.</h2>
+  <p>Design partner programme open for emerging UK managers in 2026.</p>
+  <form class="bottom-form" action="https://formspree.io/f/xlgyewva" method="POST">
+    <input type="hidden" name="proposition" value="Purser — Fund Admin">
+    <input type="hidden" name="source" value="bottom_cta">
+    <input type="email" name="email" placeholder="your@email.com" required>
+    <button type="submit">Apply for access</button>
+  </form>
+</div>
+
+<footer>
+  <div class="footer-logo">Purser</div>
+  <p class="copy">© 2026 Purser by Vela · hello@fundvela.com · Not regulated by the FCA · For informational purposes only</p>
+</footer>
+
+<script>
+  // Vercel Web Analytics (activates once enabled in the Vercel project dashboard)
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+
+  const form = document.getElementById('fund-form');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = form.querySelector('button');
+      btn.textContent = 'Submitting...'; btn.disabled = true;
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
+        if (res.ok) {
+          form.style.display = 'none';
+          document.getElementById('fund-success').style.display = 'block';
+          if (typeof gtag !== 'undefined') gtag('event', 'waitlist_signup', { proposition: 'purser' });
+        } else { btn.textContent = 'Try again'; btn.disabled = false; }
+      } catch { btn.textContent = 'Try again'; btn.disabled = false; }
+    });
+  }
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+<!-- Vercel Web Analytics — enable in Vercel → project → Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
